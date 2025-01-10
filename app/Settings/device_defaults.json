@@ -1,0 +1,22 @@
+[
+    {
+        "DEVICE_NAME": "Closet",
+        "DEVICE_IP": "10.10.0.11"
+    },
+    {
+        "DEVICE_NAME": "Left-Center",
+        "DEVICE_IP": "10.10.0.14"
+    },
+    {
+        "DEVICE_NAME": "Center",
+        "DEVICE_IP": "10.10.0.12"
+    },
+    {
+        "DEVICE_NAME": "Right-Center",
+        "DEVICE_IP": "10.10.0.15"
+    },
+    {
+        "DEVICE_NAME": "Wall",
+        "DEVICE_IP": "10.10.0.13"
+    }
+]

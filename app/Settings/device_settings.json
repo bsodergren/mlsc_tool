@@ -1,0 +1,12 @@
+{
+    "device": "device_6",
+    "settings": {
+      "device_name": "Defaultsssssss Device",
+      "fps": 60,
+      "led_brightness": 30,
+      "led_count": 60,
+      "led_mid": 30,
+      "led_strip": "ws2812_strip",
+      "output_type": "output_udp"
+    }
+  }

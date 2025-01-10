@@ -1,0 +1,8 @@
+{
+    "device": "device_6",
+    "output_type_key": "output_udp",
+    "settings": {
+      "udp_client_ip": "127.0.0.22",
+      "udp_client_port": 7777
+    }
+  }

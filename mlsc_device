@@ -1,0 +1,17 @@
+#!/usr/bin/php
+<?php
+/**
+ * Command like Metatag writer for video files.
+ */
+
+use MLSC\Core\MLSCApplication;
+
+const __HOME__           = '/home/bjorn';
+const __ROOT_DIRECTORY__ =  __HOME__.'/scripts/mlsc_scripts';
+
+$app                     = require __ROOT_DIRECTORY__.'/bootstrap.php';
+
+$customCommands          = require __CONFIG_LIB__.'/commands.php';
+$application             = new MLSCApplication('App Name', '1.0');
+$application->setCommandLoader($customCommands);
+$application->run();
