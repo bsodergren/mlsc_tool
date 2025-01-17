@@ -1,9 +1,5 @@
 <?php
 
-/**
- * CWP Media tool
- */
-
 namespace MLSC\Modules\Exec;
 
 use MLSC\Traits\Callables;
@@ -39,9 +35,8 @@ class Executable
 
     public function setCommand($command)
     {
-        $cmd[]         = $command;
-        foreach ($this->optionArgs as $option)
-        {
+        $cmd[] = $command;
+        foreach ($this->optionArgs as $option) {
             $cmd[] = $option;
         }
 

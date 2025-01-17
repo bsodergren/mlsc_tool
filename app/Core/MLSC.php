@@ -1,13 +1,9 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace MLSC\Core;
 
-use MLSC\Utilities\Option;
 use MLSC\Modules\Display\ConsoleOutput;
+use MLSC\Utilities\Option;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,12 +25,12 @@ abstract class MLSC extends Command
         'print' => null,
     ];
 
-    public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
+    public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
         self::boot($input, $output);
     }
 
-    public function boot(InputInterface $input = null, OutputInterface $output = null)
+    public function boot(?InputInterface $input = null, ?OutputInterface $output = null)
     {
         $this->command = self::getDefaultName();
         self::$input   = $input;
@@ -48,13 +44,10 @@ abstract class MLSC extends Command
     public function process()
     {
         $ClassCmds = $this->runCommand();
-        foreach ($ClassCmds as $cmd => $option)
-        {
-            if (method_exists($this, $cmd))
-            {
+        foreach ($ClassCmds as $cmd => $option) {
+            if (method_exists($this, $cmd)) {
                 $this->{$cmd}($option);
-            } else
-            {
+            } else {
                 self::$output->writeln('<info>'.$cmd.' doesnt exist</info>');
 
                 return 0;
@@ -72,42 +65,36 @@ abstract class MLSC extends Command
 
     public function runCommand()
     {
-        $array   = $this->commandList;
+        $array = $this->commandList;
+        if (null === $array) {
+            $array = [];
+        }
 
         $default = $this->default;
-        if (isset($this->defaultCommands))
-        {
+        if (isset($this->defaultCommands)) {
             $default = $this->defaultCommands;
         }
 
-        foreach (Option::getOptions() as $option => $value)
-        {
-            if (key_exists($option, $array))
-            {
+        foreach (Option::getOptions() as $option => $value) {
+            if (\array_key_exists($option, $array)) {
                 $cmd = $option;
-                foreach ($array[$option] as $method => $args)
-                {
-                    if (null !== $args)
-                    {
-                        $commandArgs = option::getValue($cmd);
+                foreach ($array[$option] as $method => $args) {
+                    if (null !== $args) {
+                        $commandArgs = Option::getValue($cmd);
 
-                        if (is_array($commandArgs))
-                        {
-                            if (key_exists(0, $commandArgs))
-                            {
-                                if ('isset' == $args)
-                                {
+                        if (\is_array($commandArgs)) {
+                            if (\array_key_exists(0, $commandArgs)) {
+                                if ('isset' == $args) {
                                     $Commands[$method] = $commandArgs[0];
 
                                     continue;
                                 }
                             }
                         }
-                        $args        = $commandArgs;
+                        $args = $commandArgs;
                     }
                     $Commands[$method] = $args; // => $value];
-                    if ('default' == $method)
-                    {
+                    if ('default' == $method) {
                         unset($Commands[$method]);
                         $Commands = array_merge($Commands, $default);
                     }
@@ -115,8 +102,7 @@ abstract class MLSC extends Command
             }
         }
 
-        if (!isset($Commands))
-        {
+        if (!isset($Commands)) {
             $Commands = $default;
         }
 
@@ -130,12 +116,10 @@ abstract class MLSC extends Command
         $s      = [];
         $file   = $trace[1]['file'];
 
-        foreach ($trace as $i => $row)
-        {
+        foreach ($trace as $i => $row) {
             $class = '';
 
-            switch ($row['function'])
-            {
+            switch ($row['function']) {
                 case __FUNCTION__:
                     break;
 
@@ -161,11 +145,10 @@ abstract class MLSC extends Command
                     break;
 
                 default:
-                    if ('' != $row['class'])
-                    {
+                    if ('' != $row['class']) {
                         $class = $row['class'].$row['type'];
                     }
-                    $s[]    = $class.$row['function'].'()';
+                    $s[] = $class.$row['function'].'()';
 
                     // $file   = $row['file'];
                     break;
@@ -176,8 +159,8 @@ abstract class MLSC extends Command
             ++$i;
         }
         //  $s = array_reverse($s);
-        $s_str  = implode("->", $s);
-        $file   = pathinfo($file, \PATHINFO_BASENAME);
+        $s_str = implode('->', $s);
+        $file  = pathinfo($file, \PATHINFO_BASENAME);
 
         return $file.':'.$lineno.':'.$s_str;
     }

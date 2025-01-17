@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace MLSC\Utilities;
 
 class Strings extends \Nette\Utils\Strings
@@ -12,13 +8,10 @@ class Strings extends \Nette\Utils\Strings
 
     public static function clean($filename)
     {
-        foreach (str_split($filename) as $char)
-        {
-            if (\ord($char) > 125)
-            {
+        foreach (str_split($filename) as $char) {
+            if (\ord($char) > 125) {
                 $str[] = ' ';
-            } else
-            {
+            } else {
                 $str[] = $char;
             }
         }
@@ -37,8 +30,7 @@ class Strings extends \Nette\Utils\Strings
     public static function print_array($array, $die = 0)
     {
         print_r($array);
-        if (1 == $die)
-        {
+        if (1 == $die) {
             exit(\PHP_EOL);
         }
     }
@@ -48,48 +40,39 @@ class Strings extends \Nette\Utils\Strings
         $trace = debug_backtrace();
 
         // dd($trace);
-        foreach ($trace as $key => $row)
-        {
-            if (str_contains($row['function'], 'CallingFunctionName'))
-            {
+        foreach ($trace as $key => $row) {
+            if (str_contains($row['function'], 'CallingFunctionName')) {
                 continue;
             }
 
-            if (\array_key_exists('class', $row))
-            {
-                if (str_contains($row['class'], 'Symfony'))
-                {
+            if (\array_key_exists('class', $row)) {
+                if (str_contains($row['class'], 'Symfony')) {
                     continue;
                 }
-                if (str_contains($row['class'], 'MediaStopWatch'))
-                {
+                if (str_contains($row['class'], 'MediaStopWatch')) {
                     continue;
                 }
             }
 
-            if (str_contains($row['function'], 'watch'))
-            {
+            if (str_contains($row['function'], 'watch')) {
                 $calledFile = basename($row['file']);
                 $calledLine = $row['line'];
 
                 continue;
             }
-            if (str_contains($row['function'], 'require_once'))
-            {
+            if (str_contains($row['function'], 'require_once')) {
                 $calledFile = basename($row['file']);
                 $calledLine = $row['line'];
 
                 continue;
             }
-            if ('' != $row['class'])
-            {
+            if ('' != $row['class']) {
                 $class = $row['class'];
                 preg_match('/.*\\\\([A-Za-z]+)/', $class, $out);
                 $class = $out[1];
             }
 
-            if ($row['function'])
-            {
+            if ($row['function']) {
                 $function = $row['function'];
             }
 
@@ -103,30 +86,26 @@ class Strings extends \Nette\Utils\Strings
 
     public static function truncateString($string, $maxlength, $ellipsis = false)
     {
-        if (mb_strlen($string) <= $maxlength)
-        {
+        if (mb_strlen($string) <= $maxlength) {
             return $string;
         }
 
-        if (str_contains($string, "\033[0m"))
-        {
+        if (str_contains($string, "\033[0m")) {
             $string       = str_replace("\033[0m", '', $string);
             $color_length = mb_strlen("\033[0m");
             $color_close  = "\033[0m";
         }
-        if (empty($ellipsis))
-        {
+        if (empty($ellipsis)) {
             $ellipsis = '';
         }
 
-        if (true === $ellipsis)
-        {
+        if (true === $ellipsis) {
             $ellipsis = '…';
         }
 
         $ellipsis_length = mb_strlen($ellipsis);
 
-        $maxlength       = $maxlength - $ellipsis_length - $color_length;
+        $maxlength = $maxlength - $ellipsis_length - $color_length;
 
         return trim(mb_substr($string, 0, $maxlength)).$ellipsis.$color_close;
     }
@@ -140,11 +119,10 @@ class Strings extends \Nette\Utils\Strings
     {
         //  static $start_time;
 
-        $label      = self::truncateString($label, 45, true);
+        $label = self::truncateString($label, 45, true);
 
         // if we go over our bound, just ignore it
-        if ($done > $total)
-        {
+        if ($done > $total) {
             echo \PHP_EOL;
 
             return 0;
@@ -153,31 +131,28 @@ class Strings extends \Nette\Utils\Strings
         //   if(empty($start_time)) $start_time=time();
         //   $now = time();
 
-        $perc       = (float) ($done / $total);
+        $perc = (float) ($done / $total);
 
-        $bar        = floor($perc * $size);
+        $bar = floor($perc * $size);
 
         $status_bar = "\r[".$label;
         $status_bar .= ' '.number_format($done).'/'.number_format($total).' ';
 
-        $str_len    = \strlen($status_bar);
-        $size       = $size - $str_len;
-        $bar        = floor($perc * $size);
-        if ($bar < 1)
-        {
+        $str_len = \strlen($status_bar);
+        $size -= $str_len;
+        $bar = floor($perc * $size);
+        if ($bar < 1) {
             $bar = 0;
         }
         $status_bar .= str_repeat('=', $bar);
-        if ($bar < $size)
-        {
+        if ($bar < $size) {
             $status_bar .= '>';
             $status_bar .= str_repeat(' ', $size - $bar);
-        } else
-        {
+        } else {
             $status_bar .= '=';
         }
 
-        $disp       = number_format($perc * 100, 0);
+        $disp = number_format($perc * 100, 0);
 
         $status_bar .= "] {$disp}%";
         echo $status_bar;
@@ -185,8 +160,7 @@ class Strings extends \Nette\Utils\Strings
         // flush();
 
         // when done, send a newline
-        if ($done == $total || 0 == $done)
-        {
+        if ($done == $total || 0 == $done) {
             echo \PHP_EOL;
 
             return 0;
@@ -209,8 +183,7 @@ class Strings extends \Nette\Utils\Strings
 
     public static function wrapimplode($array, $before = '', $after = '', $separator = '')
     {
-        if (!$array)
-        {
+        if (!$array) {
             return '';
         }
 

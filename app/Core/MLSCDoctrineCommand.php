@@ -1,9 +1,5 @@
 <?php
 
-/**
- * CWP Media tool
- */
-
 namespace MLSC\Core;
 
 use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;

@@ -1,9 +1,5 @@
 <?php
 
-/**
- * CWP Media tool
- */
-
 namespace MLSC\Traits\Device;
 
 use MLSC\Modules\HTTP\HTTP;

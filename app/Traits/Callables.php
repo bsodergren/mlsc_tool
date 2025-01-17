@@ -1,9 +1,5 @@
 <?php
 
-/**
- * CWP Media tool
- */
-
 namespace MLSC\Traits;
 
 use Symfony\Component\Process\Process;
@@ -12,11 +8,9 @@ trait Callables
 {
     public function ProcessOutput($type, $buffer)
     {
-        if (Process::ERR === $type)
-        {
+        if (Process::ERR === $type) {
             echo 'ERR > '.$buffer;
-        } else
-        {
+        } else {
             echo 'OUT > '.$buffer;
         }
     }
@@ -25,8 +19,7 @@ trait Callables
     {
         $regex   = '/(\d+.\d+.\d+.\d+).*('.$this->macid.').*/';
         $matched = preg_match($regex, $buffer, $output_array);
-        if ($matched == true)
-        {
+        if (true == $matched) {
             $this->ip = $output_array[1];
         }
     }

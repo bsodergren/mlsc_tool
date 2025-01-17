@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
 
 namespace MLSC\Commands\Show;
 
@@ -20,7 +17,7 @@ class Options extends MLSCOptions
     {
         Translate::$Class = __CLASS__;
         return [
-            ['device_id', 'D', InputOption::VALUE_REQUIRED, Translate::text('L__BACKUP_DIRECTORY')],
+            ['deviceid', 'D', InputOption::VALUE_REQUIRED, Translate::text('L__BACKUP_DIRECTORY')],
         ];
     }
 }

@@ -2,15 +2,11 @@
 
 namespace MLSC\Core;
 
-/**
- * Command like Metatag writer for video files.
- */
 
-
-use UTM\Utilities\Option;
-use UTM\Bundle\Stash\Cache;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Bundle\Stash\Cache;
+use UTM\Utilities\Option;
 
 class MLSCCache
 {
@@ -28,18 +24,15 @@ class MLSCCache
 
         Option::init($input);
 
-        if (!is_dir(__CACHE_DIR__))
-        {
+        if (!is_dir(__CACHE_DIR__)) {
             mkdir(__CACHE_DIR__, 0777, true);
         }
 
-        self::$stash = Cache::file(function (): void
-        {
+        self::$stash = Cache::file(function (): void {
             $this->setCacheDir(__CACHE_DIR__);
         });
 
-        if (true == Option::isTrue('flush'))
-        {
+        if (true == Option::isTrue('flush')) {
             self::$stash->flush();
             exit('cache flushed');
         }
@@ -49,8 +42,7 @@ class MLSCCache
     {
         // utminfo(func_get_args());
 
-        if (true == Option::isTrue('nocache'))
-        {
+        if (true == Option::isTrue('nocache')) {
             return false;
         }
         $value = self::$stash->get($key);

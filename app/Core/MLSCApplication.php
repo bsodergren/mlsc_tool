@@ -1,18 +1,14 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace MLSC\Core;
 
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Command\DumpCompletionCommand;
 use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Command\ListCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Command\DumpCompletionCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 class MLSCApplication extends Application
 {

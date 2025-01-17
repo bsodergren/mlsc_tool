@@ -7,6 +7,9 @@
 namespace MLSC\Commands\Show;
 
 use MLSC\Core\MLSC;
+use UTM\Utilities\Option;
+use MLSC\Modules\Device\Device;
+use MLSC\Modules\Effects\Effects;
 
 class Process extends MLSC
 {
@@ -17,7 +20,28 @@ class Process extends MLSC
 
     public function exec($option = null)
     {
-        MLSC::$console->writeln("fasdfsda");
+
+
+        $showType = MLSC::$input->getArgument('item');
+  $typeName       = MLSC::$input->getArgument('name');
+  $device_id = Device::clean(Option::getValue("deviceid"));
+        if($showType == "effects"){
+            $effects = new Effects();
+            $effects->getAllEffects();
+        }
+        if($showType == "effect"){
+            $effects = new Effects($device_id);
+            $effects-> getEffect($typeName);
+        }
+
+                 utmdd([$showType , $device_id,$typeName ] );
+
+
+        MLSC::$console->writeln($showType , $device_id,$typeName );
+       
+
+
+        // MLSC::$console->writeln($macid);
                 utmdd("fdsasd");
     }
 }

@@ -17,11 +17,14 @@
     },
     "autoload": {
         "exclude-from-classmap": [
-            "vendor\\symfony\\console\\Descriptor\\ApplicationDescription.php"
+            "vendor\\symfony\\console\\Descriptor\\ApplicationDescription.php",
+            "vendor\\symfony\\console\\Command\\DumpCompletionCommand.php"
+
         ],
         "psr-4": {
             "MLSC\\": "app",
-            "Descriptor\\": "app/Overrides/"
+            "Descriptor\\": "app/Overrides/",
+      "Command\\": "app/Overrides/"
         },
         "classmap": [
             "app"

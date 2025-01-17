@@ -1,43 +1,35 @@
 <?php
 
-/**
- * CWP Media tool
- */
-
 namespace MLSC\Modules\Device;
 
 use MLSC\Modules\HTTP\HTTP;
 use MLSC\Traits\Device\Add;
+use MLSC\Traits\Device\Delete;
 use MLSC\Traits\Device\Get;
 use MLSC\Traits\Device\Set;
-use MLSC\Traits\Device\Delete;
 use MLSC\Traits\Device\Update;
 
 class Device
 {
     use Add;
-    use Update;
-    use Set;
-    use Get;
     use Delete;
+    use Get;
+    use Set;
+    use Update;
 
-    public $devices   = [];
+    public $devices = [];
 
     public $device_id = '';
     public $settings  = [];
-
-
-
 
     public function __construct()
     {
         $this->getAllDevices();
     }
 
-    public static function clean(&$string)
+    public static function clean($string)
     {
-        if (!preg_match('(device)', $string))
-        {
+        if (!preg_match('(device)', $string)) {
             $string = 'device_'.$string;
         }
 
@@ -46,24 +38,21 @@ class Device
 
     public function ipExists($ip)
     {
-        foreach ($this->devices as $id => $device)
-        {
-            if ($ip == $device['ip'])
-            {
+        foreach ($this->devices as $id => $device) {
+            if ($ip == $device['ip']) {
                 return true;
             }
         }
 
         return false;
     }
+
     public function getAllDevices()
     {
-        if (0 == count($this->devices))
-        {
+        if (0 == \count($this->devices)) {
             $this->devices = HTTP::getSystem();
 
-            foreach ($this->devices as $k => $device)
-            {
+            foreach ($this->devices as $k => $device) {
                 $settings              = $this->getDeviceInfo($device['id']);
                 $devices[$k]['id']     = $this->devices[$k]['id'];
                 $devices[$k]['device'] = $settings['device'];

@@ -1,16 +1,12 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace MLSC\Modules\Wifi;
 
 use MLSC\Core\MLSC;
-use Nette\Utils\Callback;
-use MLSC\Traits\Callables;
 use MLSC\Modules\Device\Device;
 use MLSC\Modules\Exec\Executable;
+use MLSC\Traits\Callables;
+use Nette\Utils\Callback;
 
 class WiFi
 {
@@ -33,7 +29,7 @@ class WiFi
 
     public function AP_STA_CONNECTED($macId = '')
     {
-        $callback    = Callback::check([$this, 'getIpfromNeighbor']);
+        $callback = Callback::check([$this, 'getIpfromNeighbor']);
         $this->exec->addOptionArg('neighbor');
         $this->macid = $macId;
         // $this->exec->macid = $macId;
@@ -43,19 +39,16 @@ class WiFi
 
         $this->exec->exec($callback);
 
-
         MLSC::$console->writeln($this->ip);
 
-        if (!$this->device->ipExists($this->ip))
-        {
-            $device_id   = $this->device->addDevice($this->ip);
+        if (!$this->device->ipExists($this->ip)) {
+            $device_id = $this->device->addDevice($this->ip);
             utmdd($device_id);
 
-
-            //$device_id   = [0 => 'device_5', 1 => 'Box 1'];
+            // $device_id   = [0 => 'device_5', 1 => 'Box 1'];
             // $this->device->setBrightness('50');
         }
-        utmdd("ip exist");
+        utmdd('ip exist');
 
         //        |grep "'.$mac_id.'" | cut -d" " -f1
     }

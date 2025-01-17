@@ -1,29 +1,25 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace MLSC\Core;
 
-use MLSC\Utilities\Timer;
 use MLSC\Bundle\Monolog\MLSCLog;
+use MLSC\Utilities\Timer;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Exception\ExceptionInterface;
 
 class MLSCCommand extends MLSCDoctrineCommand
 {
-    public static $optionArg             = [];
+    public static $optionArg = [];
 
     //    private ?Application $application = null;
     //    private ?string $name = null;
-    private ?string $processTitle        = null;
+    private ?string $processTitle = null;
     //    private array $aliases = [];
     //    private InputDefinition $definition;
     //    private bool $hidden = false;
@@ -36,8 +32,7 @@ class MLSCCommand extends MLSCDoctrineCommand
     //  private array $usages = [];
     //  private ?HelperSet $helperSet = null;
 
-
-    public $CommandArguments             = null;
+    public $CommandArguments;
 
     public function getSubscribedSignals(): array
     {
@@ -47,8 +42,7 @@ class MLSCCommand extends MLSCDoctrineCommand
 
     public function handleSignal(int $signal): void
     {
-        if (\SIGINT === $signal)
-        {
+        if (\SIGINT === $signal) {
             echo \PHP_EOL;
             echo 'Exiting, cleaning up';
             echo \PHP_EOL;
@@ -61,21 +55,18 @@ class MLSCCommand extends MLSCDoctrineCommand
 
     public function configure(): void
     {
-        $child      = get_called_class();
+        $child = static::class;
         $this->setName($child::CMD_NAME)->setDescription($child::CMD_DESCRIPTION);
 
         $this->setDefinition(MLSCOptions::getDefinition($this->getName()));
 
-        $arguments  = MLSCOptions::getArguments($child::CMD_NAME, $child::CMD_DESCRIPTION);
-        if (is_array($arguments))
-        {
+        $arguments = MLSCOptions::getArguments($child::CMD_NAME, $child::CMD_DESCRIPTION);
+        if (\is_array($arguments)) {
             $this->addArgument(...$arguments);
         }
 
-        if ($this->CommandArguments !== null)
-        {
-            foreach ($this->CommandArguments as $cmd)
-            {
+        if (null !== $this->CommandArguments) {
+            foreach ($this->CommandArguments as $cmd) {
                 $this->addArgument($cmd[0], InputArgument::{$cmd[1]}, $cmd[2]);
             }
         }
@@ -101,13 +92,10 @@ class MLSCCommand extends MLSCDoctrineCommand
         $this->mergeApplicationDefinition();
 
         // bind the input against the command specific arguments/options
-        try
-        {
+        try {
             $input->bind($this->getDefinition());
-        } catch (ExceptionInterface $e)
-        {
-            if (!$this->ignoreValidationErrors)
-            {
+        } catch (ExceptionInterface $e) {
+            if (!$this->ignoreValidationErrors) {
                 throw $e;
             }
         }
@@ -117,55 +105,43 @@ class MLSCCommand extends MLSCDoctrineCommand
         $this->initialize($input, $output);
         // MLSCLog::logger('After initialize');
 
-        if (null !== $this->processTitle)
-        {
-            if (\function_exists('cli_set_process_title'))
-            {
-                if (!@cli_set_process_title($this->processTitle))
-                {
-                    if ('Darwin' === \PHP_OS)
-                    {
+        if (null !== $this->processTitle) {
+            if (\function_exists('cli_set_process_title')) {
+                if (!@cli_set_process_title($this->processTitle)) {
+                    if ('Darwin' === \PHP_OS) {
                         $output->writeln('<comment>Running "cli_set_process_title" as an unprivileged user is not supported on MacOS.</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
-                    } else
-                    {
+                    } else {
                         cli_set_process_title($this->processTitle);
                     }
                 }
-            } elseif (\function_exists('setproctitle'))
-            {
+            } elseif (\function_exists('setproctitle')) {
                 setproctitle($this->processTitle);
-            } elseif (OutputInterface::VERBOSITY_VERY_VERBOSE === $output->getVerbosity())
-            {
+            } elseif (OutputInterface::VERBOSITY_VERY_VERBOSE === $output->getVerbosity()) {
                 $output->writeln('<comment>Install the proctitle PECL to be able to change the process title.</comment>');
             }
         }
 
-        if ($input->isInteractive())
-        {
+        if ($input->isInteractive()) {
             $this->interact($input, $output);
         }
 
         // The command name argument is often omitted when a command is executed directly with its run() method.
         // It would fail the validation if we didn't make sure the command argument is present,
         // since it's required by the application.
-        if ($input->hasArgument('command') && null === $input->getArgument('command'))
-        {
+        if ($input->hasArgument('command') && null === $input->getArgument('command')) {
             $input->setArgument('command', $this->getName());
         }
 
         $input->validate();
 
-        if ($this->code)
-        {
+        if ($this->code) {
             $statusCode = ($this->code)($input, $output);
-        } else
-        {
+        } else {
             $statusCode = $this->execute($input, $output);
             //  stopwatch();
 
-            if (!\is_int($statusCode))
-            {
-                throw new \TypeError(sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.', static::class, get_debug_type($statusCode)));
+            if (!\is_int($statusCode)) {
+                throw new \TypeError(\sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.', static::class, get_debug_type($statusCode)));
             }
         }
 
@@ -174,16 +150,14 @@ class MLSCCommand extends MLSCDoctrineCommand
 
     public static function getProcessClass()
     {
-        $className   = get_called_class();
-        $classPath   = rtrim($className, "Command");
-        $classPath .= "Process";
+        $className = static::class;
+        $classPath = rtrim($className, 'Command');
+        $classPath .= 'Process';
         // MLSCLog::logger('Claas Path', $classPath);
 
         //  $classPath   = str_replace('\Command', '\\Process', $className);
         return $classPath;
     }
-
-
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -195,34 +169,23 @@ class MLSCCommand extends MLSCDoctrineCommand
 
         $arguments = $input->getArguments();
 
-        if (\count($arguments) > 0)
-        {
-            foreach ($arguments as $cmd => $value)
-            {
-                if ($value == $cmd)
-                {
+        if (\count($arguments) > 0) {
+            foreach ($arguments as $cmd => $value) {
+                if ($value == $cmd) {
                     continue;
                 }
                 $cmdArgument[] = $input->getArgument($cmd);
             }
 
-
             // $cmdArgument = $input->getArgument("command");
 
-
-            if (null !== $cmdArgument)
-            {
+            if (null !== $cmdArgument) {
                 self::$optionArg = array_merge(self::$optionArg, $cmdArgument);
             }
-
-
-            //
         }
 
-
-
-        $class     = self::getProcessClass();
-        $Process   = new $class(...array_merge([$input, $output], self::$optionArg));
+        $class   = self::getProcessClass();
+        $Process = new $class(...array_merge([$input, $output], self::$optionArg));
         // dd($class,self::$optionArg);
 
         // $Process = new $class(...$args);
@@ -233,10 +196,8 @@ class MLSCCommand extends MLSCDoctrineCommand
 
         $Process->process();
 
-
         return Command::SUCCESS;
     }
-
 
     // protected function execute(InputInterface $input, OutputInterface $output)
     // {
@@ -260,7 +221,7 @@ class MLSCCommand extends MLSCDoctrineCommand
 
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
-        $className = get_called_class();
+        $className = static::class;
         // MLSCLog::logger('Class Name', $className);
     }
 }

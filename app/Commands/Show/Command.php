@@ -17,7 +17,7 @@ final class Command extends MLSCCommand
 {
     use Lang;
     public $CommandArguments = [
-        ['type', 'REQUIRED', 'wireless event'],
+        ['item', 'OPTIONAL', 'wireless event'],
         ['name', 'OPTIONAL', 'data string']
     ];
 }

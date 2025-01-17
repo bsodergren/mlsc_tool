@@ -1,42 +1,34 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace MLSC\Utilities;
 
 class Timer extends MLSCStopWatch
 {
-    public static $logProc        = false;
+    public static $logProc = false;
 
     public static function startwatch($input, $output, $options = [])
     {
         parent::init($input, $output);
-        if (array_key_exists('log', $options))
-        {
+        if (\array_key_exists('log', $options)) {
             parent::$writeNow = $options['log'];
         }
-        if (array_key_exists('display', $options))
-        {
+        if (\array_key_exists('display', $options)) {
             parent::$display = $options['display'];
         }
     }
 
     public static function getTrace($id = 0)
     {
-        $trace         = debug_backtrace();
+        $trace = debug_backtrace();
 
-        if (__FILE__ == $trace[$id]['file'])
-        {
+        if (__FILE__ == $trace[$id]['file']) {
             ++$id;
         }
 
-        $logger_class  = explode("\\", __LOGGER_CLASS__);
+        $logger_class = explode('\\', __LOGGER_CLASS__);
         rsort($logger_class);
 
-        if (str_contains($trace[$id]['file'], $logger_class[1]))
-        {
+        if (str_contains($trace[$id]['file'], $logger_class[1])) {
             ++$id;
         }
 
@@ -53,17 +45,17 @@ class Timer extends MLSCStopWatch
 
     public static function watch($text = 'Watch Timer', $var = null)
     {
-        [$file, $line ] = self::getTrace();
-        $text           = str_pad($text, 18, ' ');
-        $text           = parent::formatPrint($text, ['blue']);
+        [$file, $line] = self::getTrace();
+        $text          = str_pad($text, 18, ' ');
+        $text          = parent::formatPrint($text, ['blue']);
         parent::dump($file.':'.$line.':'.$text, $var);
     }
 
     public static function startLap($text = 'lap', $_ = '')
     {
-        [$file, $line ] = self::getTrace();
-        $text           = trim(parent::formatPrint($text, ['blue']));
-        $logText        = $file.':'.$line.':'.$text;
+        [$file, $line] = self::getTrace();
+        $text          = trim(parent::formatPrint($text, ['blue']));
+        $logText       = $file.':'.$line.':'.$text;
         parent::lap($logText, null);
     }
 
