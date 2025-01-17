@@ -7,7 +7,7 @@
 use MLSC\Core\MLSCApplication;
 
 const __HOME__           = '/home/bjorn';
-const __ROOT_DIRECTORY__ =  __HOME__.'/scripts/mlsc_scripts';
+const __ROOT_DIRECTORY__ =  __HOME__.'/scripts/mlsc_tool';
 
 $app                     = require __ROOT_DIRECTORY__.'/bootstrap.php';
 

@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace MLSC\Commands\Show;
+namespace MLSC\Commands\Set;
 
 use MLSC\Core\MLSCOptions;
 use MLSC\Traits\Translate;

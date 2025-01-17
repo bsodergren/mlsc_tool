@@ -4,7 +4,7 @@
  * CWP Media tool
  */
 
-namespace MLSC\Commands\Show;
+namespace MLSC\Commands\Set;
 
 use MLSC\Core\MLSC;
 

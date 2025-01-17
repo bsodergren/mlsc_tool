@@ -4,13 +4,13 @@
  * CWP Media tool
  */
 
-namespace MLSC\Commands\Show;
+namespace MLSC\Commands\Set;
 
 use MLSC\Core\MLSCCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 const DESCRIPTION = 'Example Description';
-const NAME        = 'show';
+const NAME        = 'set';
 #[AsCommand(name: NAME, description: DESCRIPTION)]
 
 final class Command extends MLSCCommand
